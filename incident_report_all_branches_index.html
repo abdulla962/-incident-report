@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123b63"><title>Incident Report System | All Branches</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#17212b}
+:root{--nav:#123b63;--nav2:#1c5b8f;--line:#d9e2eb;--card:#fff}
+header{background:linear-gradient(135deg,var(--nav),var(--nav2));color:#fff;padding:16px;position:sticky;top:0;z-index:10;box-shadow:0 3px 14px #0002}
+.brand{max-width:1100px;margin:auto;display:flex;align-items:center;gap:14px}.brand img{width:92px;height:52px;object-fit:contain;background:#fff;border-radius:7px;padding:3px}.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;margin:4px 0 0;opacity:.85}
+main{max-width:1100px;margin:18px auto;padding:0 12px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1;padding:12px;border:1px solid var(--line);background:#fff;border-radius:9px;font-weight:800;color:#345;cursor:pointer}.tab.active{background:var(--nav);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:0 4px 18px #173b5910;padding:17px;margin-bottom:14px}.section-title{font-weight:900;color:var(--nav);margin:2px 0 14px;font-size:16px;border-right:4px solid var(--nav2);padding-right:8px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}label{font-size:12px;font-weight:800;display:block;margin-bottom:6px;color:#394957}input,select,textarea{width:100%;font:inherit;padding:11px 12px;border:1px solid #ccd7e1;border-radius:8px;background:#fff;color:#17212b}textarea{min-height:105px;resize:vertical}.full{grid-column:1/-1}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:8px;padding:11px 16px;font-weight:800;cursor:pointer}.primary{background:var(--nav);color:#fff}.success{background:#23734c;color:#fff}.muted{background:#e7edf2;color:#243746}.danger{background:#a33;color:#fff}
+.search{margin-bottom:12px}.report-row{border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;display:flex;justify-content:space-between;gap:10px;align-items:center;background:#fff}.small{font-size:12px;color:#607080}
+#preview{display:none}.report-sheet{background:#fff;padding:28px;max-width:900px;margin:auto;border:1px solid #ddd}.report-brand{display:flex;align-items:center;justify-content:center;gap:18px;border-bottom:2px solid #222;padding-bottom:12px;margin-bottom:15px}.report-brand img{width:110px;height:60px;object-fit:contain}.rhead{text-align:center}.rhead h2{margin:0 0 5px;font-size:23px}.rhead h3{margin:0;font-size:14px;font-weight:500}.rt{width:100%;border-collapse:collapse;margin:10px 0 17px}.rt td{border:1px solid #222;padding:9px;text-align:right}.rt td:first-child{width:30%;font-weight:800;background:#f0f3f6}.rsection{font-weight:900;background:#dfe6ed;border:1px solid #222;padding:8px;margin-top:13px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:48px}.hidden{display:none!important}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.sign{grid-template-columns:1fr}.report-sheet{padding:14px}.tabs{position:sticky;top:80px;z-index:5}.report-row{align-items:flex-start;flex-direction:column}}
+@media print{body{background:#fff}.no-print,header,main>.tabs{display:none!important}#preview{display:block!important}.report-sheet{border:0;padding:0;max-width:none}.card{box-shadow:none;border:0}}
+</style>
+</head>
+<body>
+<header><div class="brand"><img src="logo.png" alt="Company Logo"><div><h1>Incident Report System</h1><p id="headerBranch">Technical Inspection Center – Riffa Branch</p></div></div></header>
+<main>
+<div class="tabs no-print"><button class="tab active" id="newTab" onclick="showTab('new')">تقرير جديد</button><button class="tab" id="listTab" onclick="showTab('list')">التقارير المحفوظة</button></div>
+<section id="new">
+<div class="card"><div class="section-title">بيانات التقرير</div><div class="grid">
+<div><label>الفرع</label><select id="branch" onchange="updateBranch()"><option value="Riffa">Riffa</option><option value="Isa Town (VISCO)">Isa Town (VISCO)</option><option value="Hamad Town (WAQIF)">Hamad Town (WAQIF)</option><option value="Manama (Central Market)">Manama (Central Market)</option><option value="Arad">Arad</option><option value="Diyar Al Muharraq">Diyar Al Muharraq</option></select></div><div><label>رقم التقرير</label><input id="ref" readonly></div><div><label>التاريخ</label><input id="date" type="date"></div><div><label>الوقت</label><input id="time" type="time"></div><div class="full"><label>الموقع</label><input id="location" readonly></div>
+</div></div>
+<div class="card"><div class="section-title">بيانات المركبة</div><div class="grid">
+<div><label>نوع السيارة</label><input id="vehicleType" placeholder="مثال: Jeep / SUV"></div><div><label>رقم السيارة</label><input id="plate"></div>
+<div><label>نوع الحادثة / المشكلة</label><select id="incidentType"><option>Vehicle Incident</option><option>Vehicle Defect</option><option>Equipment / Device Issue</option><option>Customer Incident</option><option>Other</option></select></div>
+<div><label>درجة الحالة</label><select id="severity"><option>Normal</option><option>Important</option><option>Urgent</option></select></div>
+</div></div>
+<div class="card"><div class="section-title">تفاصيل الحادثة</div><div class="grid">
+<div class="full"><label>وصف الحادثة / المشكلة</label><textarea id="details" placeholder="اكتب تفاصيل ما حدث..."></textarea></div>
+<div class="full"><label>الإجراء المتخذ</label><textarea id="action" placeholder="اكتب الإجراء الذي تم اتخاذه..."></textarea></div>
+<div><label>اسم الفاحص</label><input id="inspector"></div><div><label>الرقم الوظيفي</label><input id="employeeId"></div>
+<div><label>اسم المسؤول</label><input id="supervisor"></div><div><label>ملاحظات إضافية</label><input id="notes"></div>
+</div><div class="actions no-print"><button class="primary" onclick="saveAndPreview()">حفظ وإنشاء التقرير</button><button class="muted" onclick="clearForm()">مسح</button></div>
+</div></section>
+<section id="list" class="hidden"><div class="card no-print"><div class="section-title">التقارير المحفوظة على هذا الجهاز</div><input class="search" id="search" oninput="renderList()" placeholder="بحث برقم التقرير أو رقم السيارة أو التاريخ..."><div id="reportsList"></div></div></section>
+<section id="preview"><div class="report-sheet">
+<div class="report-brand"><img src="logo.png" alt="Company Logo"><div class="rhead"><h2>INCIDENT REPORT</h2><h3 id="reportBranch">Technical Inspection Center – Riffa Branch</h3></div></div>
+<table class="rt"><tr><td>Report Reference No.</td><td id="r_ref"></td></tr><tr><td>Date</td><td id="r_date"></td></tr><tr><td>Time</td><td id="r_time"></td></tr><tr><td>Location</td><td id="r_location"></td></tr><tr><td>Incident Type</td><td id="r_type"></td></tr><tr><td>Severity</td><td id="r_severity"></td></tr><tr><td>Vehicle Type</td><td id="r_vehicle"></td></tr><tr><td>Vehicle Plate Number</td><td id="r_plate"></td></tr></table>
+<div class="rsection">Incident Details</div><table class="rt"><tr><td id="r_details"></td></tr></table>
+<div class="rsection">Action Taken</div><table class="rt"><tr><td id="r_action"></td></tr></table>
+<div class="rsection">Report Prepared By</div><table class="rt"><tr><td>Inspector Name</td><td id="r_inspector"></td></tr><tr><td>Employee ID</td><td id="r_id"></td></tr><tr><td>Additional Notes</td><td id="r_notes"></td></tr></table>
+<div class="sign"><div><b>Inspector Signature:</b><br><br>____________________________</div><div><b>Supervisor Name & Signature:</b><br><br>____________________________<br><span id="r_supervisor"></span></div></div>
+</div><div class="actions no-print" style="max-width:900px;margin:14px auto"><button class="success" onclick="window.print()">طباعة / حفظ PDF</button><button class="muted" onclick="backToForm()">تعديل التقرير</button><button class="primary" onclick="newReport()">تقرير جديد</button></div></section>
+</main>
+<script>
+const ids=['branch','ref','date','time','location','vehicleType','plate','incidentType','severity','details','action','inspector','employeeId','supervisor','notes'];const $=id=>document.getElementById(id);
+function genRef(){return 'IR-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-6)}
+function branchName(v){return 'Technical Inspection Center – '+v+' Branch'}
+function updateBranch(){const name=branchName($('branch').value);$('location').value=name;$('headerBranch').textContent=name}function pad(n){return String(n).padStart(2,'0')}
+function init(){let d=new Date();$('branch').value='Riffa';updateBranch();$('ref').value=genRef();$('date').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;$('time').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`;renderList()}
+function data(){let o={};ids.forEach(id=>o[id]=$(id).value);return o}function setData(o){ids.forEach(id=>$(id).value=o[id]??'')}
+function saveAndPreview(){let o=data();if(!o.vehicleType||!o.plate||!o.details){alert('يرجى تعبئة نوع السيارة ورقمها وتفاصيل الحادثة.');return}let a=JSON.parse(localStorage.getItem('incidentReports')||'[]');a.unshift(o);localStorage.setItem('incidentReports',JSON.stringify(a.slice(0,200)));fillPreview(o);$('new').classList.add('hidden');$('preview').style.display='block';window.scrollTo(0,0);renderList()}
+function fillPreview(o){$('reportBranch').textContent=o.location||branchName(o.branch||'Riffa');$('headerBranch').textContent=o.location||branchName(o.branch||'Riffa');$('r_ref').textContent=o.ref;$('r_date').textContent=o.date;$('r_time').textContent=o.time;$('r_location').textContent=o.location;$('r_type').textContent=o.incidentType;$('r_severity').textContent=o.severity;$('r_vehicle').textContent=o.vehicleType;$('r_plate').textContent=o.plate;$('r_details').textContent=o.details;$('r_action').textContent=o.action||'N/A';$('r_inspector').textContent=o.inspector||'N/A';$('r_id').textContent=o.employeeId||'N/A';$('r_notes').textContent=o.notes||'N/A';$('r_supervisor').textContent=o.supervisor||'N/A'}
+function renderList(){let a=JSON.parse(localStorage.getItem('incidentReports')||'[]'),q=($('search')?.value||'').toLowerCase();a=a.filter(x=>Object.values(x).join(' ').toLowerCase().includes(q));$('reportsList').innerHTML=a.length?a.map((x,i)=>`<div class="report-row"><div><b>${x.ref}</b><div class="small">${x.date} ${x.time} • ${x.vehicleType} • ${x.plate}</div></div><div class="actions" style="margin:0"><button class="primary" onclick="openSaved(${i})">فتح</button><button class="danger" onclick="deleteSaved('${x.ref}')">حذف</button></div></div>`).join(''):'<div class="small">لا توجد تقارير محفوظة.</div>'}
+function openSaved(index){let a=JSON.parse(localStorage.getItem('incidentReports')||'[]'),o=a[index];if(!o)return;fillPreview(o);$('new').classList.add('hidden');$('list').classList.add('hidden');$('preview').style.display='block';document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));window.scrollTo(0,0)}
+function deleteSaved(ref){if(!confirm('حذف هذا التقرير؟'))return;let a=JSON.parse(localStorage.getItem('incidentReports')||'[]').filter(x=>x.ref!==ref);localStorage.setItem('incidentReports',JSON.stringify(a));renderList()}
+function showTab(t){$('preview').style.display='none';$('new').classList.toggle('hidden',t!=='new');$('list').classList.toggle('hidden',t!=='list');$('newTab').classList.toggle('active',t==='new');$('listTab').classList.toggle('active',t==='list');if(t==='list')renderList()}
+function backToForm(){$('preview').style.display='none';$('new').classList.remove('hidden');showTab('new')}function newReport(){clearForm();showTab('new');window.scrollTo(0,0)}
+function clearForm(){ids.forEach(id=>{if(id==='location')return;if(id==='branch'){ $(id).value='Riffa'; return; }if(id==='incidentType'||id==='severity'){$(id).selectedIndex=0;return}$(id).value=''});updateBranch();$('ref').value=genRef();let d=new Date();$('date').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;$('time').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`}
+init();
+</script>
+</body></html>
