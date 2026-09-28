@@ -7,15 +7,15 @@
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f7f7f7;color:var(--ink)}
 :root{--nav:#d71920;--nav2:#ef2b32;--nav3:#b70f16;--line:#ead6d7;--card:#fff;--ink:#202020}
 header{background:linear-gradient(135deg,var(--nav3),var(--nav));color:#fff;padding:16px;position:sticky;top:0;z-index:10;box-shadow:0 3px 14px #5a000018}
-.brand{max-width:1100px;margin:auto;display:flex;align-items:center;gap:14px}.brand img{width:150px;height:62px;object-fit:contain;background:#fff;border-radius:7px;padding:5px}.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;margin:4px 0 0;opacity:.85}
+.brand{max-width:1100px;margin:auto;display:flex;align-items:center;gap:14px}.brand img{width:220px;height:90px;object-fit:contain;background:#fff;border-radius:8px;padding:4px;flex:0 0 auto}.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;margin:4px 0 0;opacity:.85}
 main{max-width:1100px;margin:18px auto;padding:0 12px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1;padding:12px;border:1px solid var(--line);background:#fff;border-radius:9px;font-weight:800;color:#333;cursor:pointer}.tab.active{background:var(--nav);color:#fff}
 .card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:0 4px 18px #5a00000d;padding:17px;margin-bottom:14px}.section-title{font-weight:900;color:var(--nav);margin:2px 0 14px;font-size:16px;border-right:4px solid var(--nav);padding-right:8px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}label{font-size:12px;font-weight:800;display:block;margin-bottom:6px;color:#394957}input,select,textarea{width:100%;font:inherit;padding:11px 12px;border:1px solid #ccd7e1;border-radius:8px;background:#fff;color:#17212b}textarea{min-height:105px;resize:vertical}.full{grid-column:1/-1}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:8px;padding:11px 16px;font-weight:800;cursor:pointer}.primary{background:var(--nav);color:#fff}.success{background:#23734c;color:#fff}.muted{background:#e7edf2;color:#243746}.danger{background:#a33;color:#fff}
 .search{margin-bottom:12px}.report-row{border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;display:flex;justify-content:space-between;gap:10px;align-items:center;background:#fff}.small{font-size:12px;color:#607080}
-#preview{display:none}.report-sheet{background:#fff;padding:28px;max-width:900px;margin:auto;border:1px solid #ddd}.report-brand{display:flex;align-items:center;justify-content:center;gap:18px;border-bottom:3px solid var(--nav);padding-bottom:12px;margin-bottom:15px}.report-brand img{width:180px;height:72px;object-fit:contain}.rhead{text-align:center}.rhead h2{margin:0 0 5px;font-size:23px;color:var(--nav)}.rhead h3{margin:0;font-size:14px;font-weight:500}.rt{width:100%;border-collapse:collapse;margin:10px 0 17px}.rt td{border:1px solid #222;padding:9px;text-align:right}.rt td:first-child{width:30%;font-weight:800;background:#fff1f1}.rsection{font-weight:900;background:#fff1f1;color:#a50d13;border:1px solid var(--nav);padding:8px;margin-top:13px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:48px}.hidden{display:none!important}
+#preview{display:none}.report-sheet{background:#fff;padding:28px;max-width:900px;margin:auto;border:1px solid #ddd}.report-brand{display:flex;align-items:center;justify-content:center;gap:18px;border-bottom:3px solid var(--nav);padding-bottom:12px;margin-bottom:15px}.report-brand img{width:240px;height:105px;object-fit:contain;flex:0 0 auto}.rhead{text-align:center}.rhead h2{margin:0 0 5px;font-size:23px;color:var(--nav)}.rhead h3{margin:0;font-size:14px;font-weight:500}.rt{width:100%;border-collapse:collapse;margin:10px 0 17px}.rt td{border:1px solid #222;padding:9px;text-align:right}.rt td:first-child{width:30%;font-weight:800;background:#fff1f1}.rsection{font-weight:900;background:#fff1f1;color:#a50d13;border:1px solid var(--nav);padding:8px;margin-top:13px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:48px}.hidden{display:none!important}
 .helper{font-size:11px;color:#777;margin-top:5px}.formal-note{background:#fff5f5;border:1px solid #f2c5c7;color:#8e151b;border-radius:8px;padding:9px 11px;margin-top:8px;font-size:12px;line-height:1.6}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.sign{grid-template-columns:1fr}.report-sheet{padding:14px}.tabs{position:sticky;top:80px;z-index:5}.report-row{align-items:flex-start;flex-direction:column}}
+@media(max-width:650px){.brand{gap:10px}.brand img{width:185px;height:78px}.brand h1{font-size:18px}.brand p{font-size:11px}.report-brand{gap:10px}.report-brand img{width:205px;height:88px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.sign{grid-template-columns:1fr}.report-sheet{padding:14px}.tabs{position:sticky;top:80px;z-index:5}.report-row{align-items:flex-start;flex-direction:column}}
 @media print{body{background:#fff}.no-print,header,main>.tabs{display:none!important}#preview{display:block!important}.report-sheet{border:0;padding:0;max-width:none}.card{box-shadow:none;border:0}}
 </style>
 </head>
@@ -60,45 +60,165 @@ function isArabic(t){return /[\u0600-\u06FF]/.test(t||'')}
 function formalizeArabic(text){
   if(!text || !isArabic(text)) return text||'';
   let t=text.trim();
-  const normalize=[
-    [/إني|اني/g,'أنني'],[/احنه/g,'نحن'],[/انه/g,'أنه'],[/ان/g,'أن'],[/اللي/g,'الذي'],[/هذي|هاذي/g,'هذه'],
-    [/هني/g,'هنا'],[/الحين|احين/g,'حالياً'],[/بعدين/g,'لاحقاً'],[/عقب/g,'بعد ذلك'],[/عشان/g,'وذلك لـ'],[/بس/g,'إلا أن'],
-    [/فيه/g,'يوجد'],[/مب|مو/g,'ليس'],[/مافيها/g,'لا يوجد بها'],[/مافي/g,'لا يوجد'],[/شلون/g,'كيفية'],[/ليش/g,'لماذا'],
-    [/ابي|أبي/g,'أرغب في'],[/ابيها/g,'أرغب فيها'],[/يبغي|يبي/g,'يرغب'],[/بيشتكي/g,'أفاد برغبته في تقديم شكوى'],
-    [/بشتكي/g,'سأتقدم بشكوى'],[/بيروح/g,'سيتوجه'],[/بروح/g,'سأتوجه'],[/بيسوي/g,'سيقوم بـ'],[/سوى/g,'قام بـ'],
-    [/يسوي/g,'يقوم بـ'],[/سويت/g,'قمت بـ'],[/سويته/g,'قمت به'],[/خله/g,'تم توجيهه إلى'],[/خليته/g,'تم توجيهه إلى'],
-    [/عطيته/g,'تم تزويده'],[/عطاه/g,'قام بتزويده'],[/خذت/g,'استلمت'],[/قلت له/g,'تم إبلاغه'],[/قلنا له/g,'تم إبلاغه'],
-    [/شرحت له/g,'تم توضيح الأمر له'],[/وضحنا له/g,'تم توضيح الأمر له'],[/كلمته/g,'تم التواصل معه'],[/كلمنا/g,'تم التواصل مع'],
-    [/الزبونه|العميله/g,'العميلة'],[/الزبون/g,'العميل'],[/السياره/g,'المركبة'],[/سياره/g,'مركبة'],[/السيارة/g,'المركبة'],
-    [/سيارته/g,'مركبته'],[/سيارتها/g,'مركبتها'],[/الفحص حق/g,'فحص'],[/حق السيارة/g,'للمركبة'],[/حقه/g,'له'],[/حقها/g,'لها'],
-    [/فلوس الفحص/g,'رسوم الفحص'],[/فلوس/g,'الرسوم'],[/ما دفع/g,'امتنع عن السداد'],[/رفض يدفع/g,'رفض سداد'],[/ما رضي يدفع/g,'لم يوافق على سداد'],
-    [/ما رضي|ما رضى/g,'لم يوافق'],[/مو راضي/g,'غير موافق'],[/مو موافق/g,'غير موافق'],[/ما يبي|ما يبغي/g,'لم يرغب'],[/ما وافق/g,'لم يوافق'],
-    [/ما يقدر/g,'لا يستطيع'],[/ما قدر/g,'لم يتمكن'],[/ما يصير/g,'لا يمكن'],[/لازم/g,'يتعين'],[/محتاج/g,'يتطلب'],
-    [/جات السيارة|يات السيارة|جت السيارة|جت سياره|جاءت السيارة/g,'حضرت المركبة'],[/يات سياره/g,'حضرت مركبة'],[/جت/g,'حضرت'],[/يات/g,'حضرت'],[/جاء/g,'حضر'],[/جا/g,'حضر'],
-    [/طلع من المكان/g,'غادر الموقع'],[/طلع/g,'غادر'],[/راح/g,'غادر'],[/رجع/g,'عاد'],[/مشى/g,'غادر'],[/وصل/g,'حضر'],
-    [/صار فيه مشكلة|صارت مشكلة|صار مشكلة/g,'وقعت الواقعة'],[/في مشكلة/g,'توجد مشكلة'],[/مشكله/g,'مشكلة'],[/تهاوش/g,'دخل في نقاش'],[/تضارب/g,'حدثت مشادة'],
-    [/عصب عليه/g,'أبدى انفعالاً تجاهه'],[/عصب/g,'أبدى انفعالاً'],[/قال لي/g,'أفادني بأن'],[/قال إن|قال ان/g,'أفاد بأن'],
-    [/يقول إن|يقول ان/g,'أفاد بأن'],[/قال/g,'أفاد'],[/ذكر/g,'أفاد'],[/سأل/g,'استفسر'],[/قلت/g,'أفدت'],[/قلنا/g,'تم إبلاغ'],[/شرحت/g,'تم توضيح'],
-    [/يشتكي/g,'يتقدم بشكوى'],[/فحصنا/g,'تم فحص'],[/فحصته/g,'تم فحصه'],[/فحصها/g,'تم فحصها'],[/خلص الفحص/g,'اكتمل الفحص'],
-    [/نجح/g,'اجتاز الفحص'],[/نجحت/g,'اجتازت الفحص'],[/رسب/g,'لم يجتز الفحص'],[/ما نجح/g,'لم يجتز الفحص'],[/ما اجتاز/g,'لم يجتز'],
-    [/لازم يتغير/g,'يتعين استبداله'],[/لازم يغير/g,'يتعين تغييره'],[/خربان/g,'معطل'],[/خربانه/g,'معطلة'],[/مو شغال|ما يشتغل/g,'لا يعمل'],[/يشتغل/g,'يعمل'],
-    [/اليوم/g,'في اليوم ذاته'],[/أمس|امس/g,'في اليوم السابق'],[/بكره|باجر/g,'في اليوم التالي']
+
+  // IMPORTANT: Keep the user's facts, names, numbers and sentence order.
+  // Only replace clearly identifiable colloquial phrases. Avoid broad
+  // substring replacements (for example replacing "ان" everywhere),
+  // because they can corrupt Arabic words and names.
+
+  const phrases = [
+    // Common Gulf/Bahraini phrases — longest phrases first
+    [/\bما\s*رضى\s*(?:يدفع|يدفعون)\b/g,'لم يوافق على سداد الرسوم'],
+    [/\bما\s*رضي\s*(?:يدفع|يدفعون)\b/g,'لم يوافق على سداد الرسوم'],
+    [/\bما\s*رضي\b/g,'لم يوافق'],
+    [/\bما\s*رضى\b/g,'لم يوافق'],
+    [/\bمو\s*راضي\b/g,'غير موافق'],
+    [/\bمو\s*موافق\b/g,'غير موافق'],
+    [/\bما\s*وافق\b/g,'لم يوافق'],
+    [/\bما\s*يبي\b/g,'لم يرغب'],
+    [/\bما\s*يبغي\b/g,'لم يرغب'],
+    [/\bما\s*يبيها\b/g,'لم يرغب بها'],
+    [/\bابي\b/g,'أرغب في'],
+    [/\bأبي\b/g,'أرغب في'],
+    [/\bيبغي\b/g,'يرغب'],
+    [/\bيبي\b/g,'يرغب'],
+    [/\bبيشتكي\b/g,'أفاد برغبته في تقديم شكوى'],
+    [/\bبشتكي\b/g,'أفاد برغبته في تقديم شكوى'],
+    [/\bبيروح\b/g,'سيتوجه'],
+    [/\bبروح\b/g,'سأتوجه'],
+    [/\bبيسوي\b/g,'سيقوم بـ'],
+    [/\bسويت\b/g,'قمت بـ'],
+    [/\bسويته\b/g,'قمت به'],
+    [/\bخله\b/g,'تم توجيهه'],
+    [/\bخليته\b/g,'تم توجيهه'],
+    [/\bعطيته\b/g,'تم تزويده'],
+    [/\bقلت\s+له\b/g,'تم إبلاغه'],
+    [/\bقلنا\s+له\b/g,'تم إبلاغه'],
+    [/\bشرحت\s+له\b/g,'تم توضيح الإجراءات له'],
+    [/\bوضحنا\s+له\b/g,'تم توضيح الإجراءات له'],
+    [/\bكلمته\b/g,'تم التواصل معه'],
+    [/\bكلمنا\b/g,'تم التواصل مع'],
+    [/\bالفحص\s+حق\b/g,'فحص'],
+    [/\bحق\s+السيارة\b/g,'للمركبة'],
+    [/\bحق\s+المركبة\b/g,'للمركبة'],
+    [/\bفلوس\s+الفحص\b/g,'رسوم الفحص'],
+    [/\bفلوس\b/g,'الرسوم'],
+    [/\bرفض\s+يدفع\b/g,'رفض سداد الرسوم'],
+    [/\bما\s+دفع\b/g,'لم يقم بسداد الرسوم'],
+    [/\bعشان\b/g,'وذلك لـ'],
+    [/\bعقب\b/g,'بعد ذلك'],
+    [/\bبعدين\b/g,'لاحقاً'],
+    [/\bالحين\b/g,'حالياً'],
+    [/\bاحين\b/g,'حالياً'],
+    [/\bمب\b/g,'ليس'],
+    [/\bمو\b/g,'ليس'],
+    [/\bمافيها\b/g,'لا يوجد بها'],
+    [/\bمافي\b/g,'لا يوجد'],
+    [/\bفيه\b/g,'يوجد'],
+    [/\bشلون\b/g,'كيفية'],
+    [/\bليش\b/g,'لماذا'],
+
+    // Vehicle wording
+    [/\bيات\s+سيارة\b/g,'حضرت مركبة'],
+    [/\bيات\s+سياره\b/g,'حضرت مركبة'],
+    [/\bجت\s+سيارة\b/g,'حضرت مركبة'],
+    [/\bجت\s+سياره\b/g,'حضرت مركبة'],
+    [/\bجات\s+السيارة\b/g,'حضرت المركبة'],
+    [/\bجات\s+السياره\b/g,'حضرت المركبة'],
+    [/\bجاءت\s+السيارة\b/g,'حضرت المركبة'],
+    [/\bالسياره\b/g,'المركبة'],
+    [/\bالسيارة\b/g,'المركبة'],
+    [/\bسياره\b/g,'مركبة'],
+    [/\bسيارة\b/g,'مركبة'],
+    [/\bسيارته\b/g,'مركبته'],
+    [/\bسيارتها\b/g,'مركبتها'],
+
+    // Inspection wording
+    [/\bما\s+نجح\b/g,'لم يجتز الفحص'],
+    [/\bما\s+اجتاز\b/g,'لم يجتز الفحص'],
+    [/\bرسب\b/g,'لم يجتز الفحص'],
+    [/\bنجح\b/g,'اجتاز الفحص'],
+    [/\bنجحت\b/g,'اجتازت الفحص'],
+    [/\bخلص\s+الفحص\b/g,'اكتمل الفحص'],
+    [/\bفحصنا\b/g,'تم فحص'],
+    [/\bفحصته\b/g,'تم فحصه'],
+    [/\bفحصها\b/g,'تم فحصها'],
+    [/\bخربان\b/g,'معطل'],
+    [/\bخربانه\b/g,'معطلة'],
+    [/\bمو\s+شغال\b/g,'لا يعمل'],
+    [/\bما\s+يشتغل\b/g,'لا يعمل'],
+
+    // Events/actions
+    [/\bطلع\s+من\s+المكان\b/g,'غادر الموقع'],
+    [/\bمشى\b/g,'غادر'],
+    [/\bطلع\b/g,'غادر'],
+    [/\bراح\b/g,'غادر'],
+    [/\bرجع\b/g,'عاد'],
+    [/\bوصل\b/g,'حضر'],
+    [/\bقال\s+لي\b/g,'أفادني بأن'],
+    [/\bقال\s+إن\b/g,'أفاد بأن'],
+    [/\bقال\s+ان\b/g,'أفاد بأن'],
+    [/\bيقول\s+إن\b/g,'أفاد بأن'],
+    [/\bيقول\s+ان\b/g,'أفاد بأن'],
+    [/\bذكر\b/g,'أفاد'],
+    [/\bسأل\b/g,'استفسر'],
+    [/\bقلت\b/g,'أفدت'],
+    [/\bقلنا\b/g,'تم إبلاغ'],
+    [/\bشرحت\b/g,'تم توضيح'],
+    [/\bيشتكي\b/g,'يتقدم بشكوى'],
+    [/\bبيشتكي\b/g,'أفاد برغبته في تقديم شكوى'],
+    [/\bمشكله\b/g,'مشكلة'],
+    [/\bتهاوش\b/g,'دخل في نقاش'],
+    [/\bتضارب\b/g,'حدثت مشادة'],
+    [/\bعصب\b/g,'أبدى انفعالاً'],
+    [/\bاليوم\b/g,'في اليوم ذاته'],
+    [/\bأمس\b/g,'في اليوم السابق'],
+    [/\bامس\b/g,'في اليوم السابق'],
+    [/\bباجر\b/g,'في اليوم التالي'],
+    [/\bبكره\b/g,'في اليوم التالي']
   ];
-  for(const [re,rep] of normalize) t=t.replace(re,rep);
-  const phrases=[
-    [/العميل لم يوافق على سداد (?:الرسوم|المبلغ) وأفاد بأن/gi,'أفاد العميل بعدم موافقته على سداد الرسوم، كما أوضح أن'],
-    [/العميل لم يوافق وأفاد بأن/gi,'أفاد العميل بعدم موافقته، كما أوضح أن'],
-    [/العميل لم يرغب وأفاد بأن/gi,'أفاد العميل بعدم رغبته، كما أوضح أن'],
-    [/تم إبلاغه بأن/gi,'تم إبلاغ العميل بأن'],
-    [/تم توضيح الأمر له/gi,'تم توضيح الإجراءات المتبعة للعميل'],
-    [/أفادني بأن/gi,'أفاد بأن'],
-    [/المركبة حضرت/gi,'حضرت المركبة']
+
+  // Specific sentence patterns are applied before general word replacements.
+  const sentencePatterns = [
+    [/^(.*?)\s*ما\s*احضرت(?:\s+(?:لي|لنا))?\s*(.*?)$/i, '$1، ولم تُحضر $2'],
+    [/^(.*?)\s*ما\s*حضرت(?:\s+(?:لي|لنا))?\s*(.*?)$/i, '$1، ولم تحضر $2'],
+    [/^(.*?)\s*وضح\s*لي\s*(.*?)$/i, '$1، وأوضح لي $2'],
+    [/^(.*?)\s*وضح\s*له\s*(.*?)$/i, '$1، وتم توضيح $2 له'],
+    [/^(.*?)\s*مو\s*راضي\s+على\s+(.*?)$/i, '$1، وأفاد بعدم موافقته على $2'],
+    [/^(.*?)\s*ليس\s*راضي\s+على\s+(.*?)$/i, '$1، وأفاد بعدم موافقته على $2'],
+
+    [
+      /^(\s*(?:حضرت|يات|جت|جات)\s+(?:مركبة|سيارة|سياره))\s+(?:تم\s+)?فحص(?:ها|ه)?\s+(?:من\s+قبل\s+)?الفاحص\s+(.+)$/i,
+      '$1، وتم فحصها من قبل الفاحص $2'
+    ],
+    [
+      /^(.*?)(?:\s+)ما\s+اجتازت\s+الفحص(?:\s+)?$/i,
+      '$1 ولم تجتز الفحص.'
+    ]
   ];
+  for(const [re,rep] of sentencePatterns) t=t.replace(re,rep);
+
   for(const [re,rep] of phrases) t=t.replace(re,rep);
-  t=t.replace(/^\s*و\s+/,'').replace(/\s{2,}/g,' ').replace(/\s+،/g,'،').replace(/،\s*،/g,'،');
+
+  // Clean punctuation/spacing without changing wording.
+  t=t.replace(/\s{2,}/g,' ')
+     .replace(/\s+،/g,'،')
+     .replace(/،\s*،/g,'،')
+     .replace(/^\s*و\s*،/,'')
+     .trim();
+
+  // Improve a few common report constructions.
+  t=t.replace(/العميل\s+لم\s+يوافق\s+على\s+سداد\s+الرسوم/gi,'أفاد العميل بعدم موافقته على سداد الرسوم');
+  t=t.replace(/المركبة\s+لم\s+تُحضر/gi,'لم تُحضر المركبة');
+  t=t.replace(/تم\s+فحصها\s+الفاحص/gi,'تم فحصها من قبل الفاحص');
+  t=t.replace(/فحصها\s+الفاحص/gi,'فحصها الفاحص');
+  t=t.replace(/تم\s+إبلاغه\s+بأن/gi,'تم إبلاغ العميل بأن');
+  t=t.replace(/تم\s+توضيح\s+الإجراءات\s+له/gi,'تم توضيح الإجراءات المتبعة للعميل');
+
   if(t && !/[.!؟]$/.test(t)) t+='.';
   return t;
 }
+
 function formalizeText(text){return isArabic(text)?formalizeArabic(text):text||''}
 function saveAndPreview(){let o=data();if(!o.vehicleType||!o.plate||!o.details){alert('يرجى تعبئة نوع السيارة ورقمها وتفاصيل الحادثة.');return}o.details=formalizeText(o.details);o.action=formalizeText(o.action);o.notes=formalizeText(o.notes);let a=JSON.parse(localStorage.getItem('incidentReports')||'[]');a.unshift(o);localStorage.setItem('incidentReports',JSON.stringify(a.slice(0,200)));fillPreview(o);$('new').classList.add('hidden');$('preview').style.display='block';window.scrollTo(0,0);renderList()}
 function fillPreview(o){$('reportBranch').textContent=o.location||branchName(o.branch||'Riffa');$('headerBranch').textContent=o.location||branchName(o.branch||'Riffa');$('r_ref').textContent=o.ref;$('r_date').textContent=o.date;$('r_time').textContent=o.time;$('r_location').textContent=o.location;$('r_type').textContent=o.incidentType;$('r_severity').textContent=o.severity;$('r_vehicle').textContent=o.vehicleType;$('r_plate').textContent=o.plate;$('r_details').textContent=o.details;$('r_action').textContent=o.action||'N/A';$('r_inspector').textContent=o.inspector||'N/A';$('r_id').textContent=o.employeeId||'N/A';$('r_notes').textContent=o.notes||'N/A';$('r_supervisor').textContent=o.supervisor||'N/A'}
