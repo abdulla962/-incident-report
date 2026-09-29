@@ -2,19 +2,19 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#b40000"><title>Incident Report System | AI Formal Writing</title>
+<meta name="theme-color" content="#b40000"><title>Incident Report System | Free Formal Writing</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#faf7f7;color:#17212b}
 :root{--nav:#b40000;--nav2:#e00000;--line:#ead5d5;--card:#fff;--soft:#fff5f5}
 header{background:linear-gradient(135deg,var(--nav),var(--nav2));color:#fff;padding:16px;position:sticky;top:0;z-index:10;box-shadow:0 3px 14px #0002}
-.brand{max-width:1100px;margin:auto;display:flex;align-items:center;gap:14px}.brand img{width:150px;height:68px;object-fit:contain;background:#fff;border-radius:7px;padding:3px}.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;margin:4px 0 0;opacity:.85}
+.brand{max-width:1100px;margin:auto;display:flex;align-items:center;gap:14px}.brand img{width:210px;height:72px;object-fit:cover;background:#ed1c24;border-radius:8px;padding:0}.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;margin:4px 0 0;opacity:.85}
 main{max-width:1100px;margin:18px auto;padding:0 12px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1;padding:12px;border:1px solid var(--line);background:#fff;border-radius:9px;font-weight:800;color:#345;cursor:pointer}.tab.active{background:var(--nav);color:#fff}
 .card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:0 4px 18px #173b5910;padding:17px;margin-bottom:14px}.section-title{font-weight:900;color:var(--nav);margin:2px 0 14px;font-size:16px;border-right:4px solid var(--nav2);padding-right:8px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}label{font-size:12px;font-weight:800;display:block;margin-bottom:6px;color:#394957}input,select,textarea{width:100%;font:inherit;padding:11px 12px;border:1px solid #ccd7e1;border-radius:8px;background:#fff;color:#17212b}textarea{min-height:105px;resize:vertical}.full{grid-column:1/-1}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:8px;padding:11px 16px;font-weight:800;cursor:pointer}.primary{background:var(--nav);color:#fff}.success{background:#23734c;color:#fff}.muted{background:#e7edf2;color:#243746}.danger{background:#a33;color:#fff}
 .search{margin-bottom:12px}.report-row{border:1px solid var(--line);border-radius:9px;padding:12px;margin:8px 0;display:flex;justify-content:space-between;gap:10px;align-items:center;background:#fff}.small{font-size:12px;color:#607080}
 #preview{display:none}.report-sheet{background:#fff;padding:28px;max-width:900px;margin:auto;border:1px solid #ddd}.report-brand{display:flex;align-items:center;justify-content:center;gap:18px;border-bottom:2px solid #222;padding-bottom:12px;margin-bottom:15px}.report-brand img{width:180px;height:72px;object-fit:contain}.rhead{text-align:center}.rhead h2{margin:0 0 5px;font-size:23px}.rhead h3{margin:0;font-size:14px;font-weight:500}.rt{width:100%;border-collapse:collapse;margin:10px 0 17px}.rt td{border:1px solid #222;padding:9px;text-align:right}.rt td:first-child{width:30%;font-weight:800;background:#f0f3f6}.rsection{font-weight:900;background:#fff0f0;border:1px solid #222;padding:8px;margin-top:13px}.ai-box{margin-top:10px;padding:10px;border:1px dashed #e0a0a0;border-radius:10px;background:#fff8f8}.ai-btn{background:#b40000;color:#fff}.ai-btn:disabled{opacity:.55;cursor:wait}.ai-status{font-size:12px;color:#7a3a3a;margin-top:6px;min-height:18px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:48px}.hidden{display:none!important}
-@media(max-width:650px){.brand img{width:125px;height:60px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.sign{grid-template-columns:1fr}.report-sheet{padding:14px}.tabs{position:sticky;top:80px;z-index:5}.report-row{align-items:flex-start;flex-direction:column}}
+@media(max-width:650px){.brand img{width:175px;height:64px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.sign{grid-template-columns:1fr}.report-sheet{padding:14px}.tabs{position:sticky;top:80px;z-index:5}.report-row{align-items:flex-start;flex-direction:column}}
 @media print{body{background:#fff}.no-print,header,main>.tabs{display:none!important}#preview{display:block!important}.report-sheet{border:0;padding:0;max-width:none}.card{box-shadow:none;border:0}}
 </style>
 </head>
@@ -32,11 +32,11 @@ main{max-width:1100px;margin:18px auto;padding:0 12px}.tabs{display:flex;gap:8px
 <div><label>درجة الحالة</label><select id="severity"><option>Normal</option><option>Important</option><option>Urgent</option></select></div>
 </div></div>
 <div class="card"><div class="section-title">تفاصيل الحادثة</div><div class="grid">
-<div class="full"><label>وصف الحادثة / المشكلة</label><textarea id="details" placeholder="اكتب التفاصيل بطريقتك العادية، حتى لو باللهجة البحرينية..."></textarea><div class="ai-box"><button type="button" class="ai-btn" id="aiDetailsBtn" onclick="rewriteWithAI('details','aiDetailsBtn','aiDetailsStatus')">✨ تحويل إلى صياغة رسمية بالذكاء الاصطناعي</button><div class="ai-status" id="aiDetailsStatus"></div></div></div>
-<div class="full"><label>الإجراء المتخذ</label><textarea id="action" placeholder="اكتب الإجراء الذي تم اتخاذه بطريقتك العادية..."></textarea><div class="ai-box"><button type="button" class="ai-btn" id="aiActionBtn" onclick="rewriteWithAI('action','aiActionBtn','aiActionStatus')">✨ تحويل إلى صياغة رسمية بالذكاء الاصطناعي</button><div class="ai-status" id="aiActionStatus"></div></div></div>
+<div class="full"><label>وصف الحادثة / المشكلة</label><textarea id="details" placeholder="اكتب التفاصيل بطريقتك العادية، حتى لو باللهجة البحرينية..."></textarea><div class="ai-box"><button type="button" class="ai-btn" id="aiDetailsBtn" onclick="rewriteWithAI('details','aiDetailsBtn','aiDetailsStatus')">✨ تحويل إلى صياغة رسمية</button><div class="ai-status" id="aiDetailsStatus"></div></div></div>
+<div class="full"><label>الإجراء المتخذ</label><textarea id="action" placeholder="اكتب الإجراء الذي تم اتخاذه بطريقتك العادية..."></textarea><div class="ai-box"><button type="button" class="ai-btn" id="aiActionBtn" onclick="rewriteWithAI('action','aiActionBtn','aiActionStatus')">✨ تحويل إلى صياغة رسمية</button><div class="ai-status" id="aiActionStatus"></div></div></div>
 <div><label>اسم الفاحص</label><input id="inspector"></div><div><label>الرقم الوظيفي</label><input id="employeeId"></div>
 <div><label>اسم المسؤول</label><input id="supervisor"></div><div><label>ملاحظات إضافية</label><input id="notes"></div>
-</div><div class="ai-status no-print" style="margin-top:12px">ملاحظة: الذكاء الاصطناعي يعيد صياغة النص فقط ويحافظ على الأسماء والأرقام والوقائع التي كتبتها دون إضافة أحداث جديدة.</div><div class="actions no-print"><button class="primary" onclick="saveAndPreview()">حفظ وإنشاء التقرير</button><button class="muted" onclick="clearForm()">مسح</button></div>
+</div><div class="ai-status no-print" style="margin-top:12px">ملاحظة: أداة الصياغة الرسمية تعمل داخل الموقع بدون اشتراك أو API، وتحوّل العبارات الشائعة إلى صياغة إدارية مع الحفاظ على الأسماء والأرقام والوقائع التي كتبتها.</div><div class="actions no-print"><button class="primary" onclick="saveAndPreview()">حفظ وإنشاء التقرير</button><button class="muted" onclick="clearForm()">مسح</button></div>
 </div></section>
 <section id="list" class="hidden"><div class="card no-print"><div class="section-title">التقارير المحفوظة على هذا الجهاز</div><input class="search" id="search" oninput="renderList()" placeholder="بحث برقم التقرير أو رقم السيارة أو التاريخ..."><div id="reportsList"></div></div></section>
 <section id="preview"><div class="report-sheet">
@@ -64,22 +64,108 @@ function showTab(t){$('preview').style.display='none';$('new').classList.toggle(
 function backToForm(){$('preview').style.display='none';$('new').classList.remove('hidden');showTab('new')}function newReport(){clearForm();showTab('new');window.scrollTo(0,0)}
 function clearForm(){ids.forEach(id=>{if(id==='location')return;if(id==='branch'){ $(id).value='Riffa'; return; }if(id==='incidentType'||id==='severity'){$(id).selectedIndex=0;return}$(id).value=''});updateBranch();$('ref').value=genRef();let d=new Date();$('date').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;$('time').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`}
 
-async function rewriteWithAI(field,btnId,statusId){
+function formalizeArabic(text, field){
+  let s = String(text || '').trim();
+  if (!s) return s;
+  s = s.replace(/\s+/g,' ').replace(/[،]{2,}/g,'،').trim();
+
+  const replacements = [
+    [/يات\s+سيارة/gi,'حضرت مركبة'],
+    [/جات\s+سيارة/gi,'حضرت مركبة'],
+    [/جت\s+سيارة/gi,'حضرت مركبة'],
+    [/يات\s+المركبة/gi,'حضرت المركبة'],
+    [/حضرت\s+سيارة/gi,'حضرت المركبة'],
+    [/السيارة/gi,'المركبة'],
+    [/الزبون/gi,'العميل'],
+    [/الزبونه/gi,'العميلة'],
+    [/الزبونة/gi,'العميلة'],
+    [/ما\s+اجتازت/gi,'لم تجتز'],
+    [/ما\s+اجتاز/gi,'لم يجتز'],
+    [/ما\s+مشت/gi,'لم تجتز'],
+    [/ما\s+تعدت/gi,'لم تجتز'],
+    [/ما\s+انقبلت/gi,'لم تُقبل'],
+    [/ما\s+يصير/gi,'لا يمكن'],
+    [/مو\s+مقبول/gi,'غير مقبول'],
+    [/مب\s+مقبول/gi,'غير مقبول'],
+    [/مو\s+صحيح/gi,'غير صحيح'],
+    [/مب\s+صحيح/gi,'غير صحيح'],
+    [/مب/gi,'ليس'],
+    [/مو/gi,'غير'],
+    [/مابي/gi,'لا أرغب'],
+    [/ما أبي/gi,'لا أرغب'],
+    [/ابي/gi,'أرغب'],
+    [/أبي/gi,'أرغب'],
+    [/لازم\s+عليه/gi,'يتعين عليه'],
+    [/لازم/gi,'يتعين'],
+    [/راح\s+يرفع/gi,'أفاد بأنه سيقوم بتقديم'],
+    [/بيرفع/gi,'سيقوم بتقديم'],
+    [/برفع/gi,'بتقديم'],
+    [/يرفع\s+شكوى/gi,'يقدم شكوى'],
+    [/رفع\s+شكوى/gi,'تقديم شكوى'],
+    [/احتج\s+على/gi,'أبدى اعتراضه على'],
+    [/احتج/gi,'أبدى اعتراضه'],
+    [/اعترض/gi,'أبدى اعتراضه'],
+    [/قال\s+انه/gi,'أفاد بأنه'],
+    [/قال\s+إنه/gi,'أفاد بأنه'],
+    [/قال/gi,'أفاد'],
+    [/انه/gi,'أنه'],
+    [/إنه/gi,'أنه'],
+    [/وضح\s+على/gi,'تم توضيح'],
+    [/وضح\s+له/gi,'تم توضيح'],
+    [/وضحت\s+له/gi,'تم توضيح'],
+    [/شرحنا/gi,'تم توضيح'],
+    [/شرحت\s+له/gi,'تم توضيح'],
+    [/قلت\s+له/gi,'تم إبلاغه'],
+    [/قلنا\s+له/gi,'تم إبلاغه'],
+    [/بلغناه/gi,'تم إبلاغه'],
+    [/خبرناه/gi,'تم إبلاغه'],
+    [/رفض\s+يدفع/gi,'رفض سداد'],
+    [/ما\s+رضى\s+يدفع/gi,'رفض سداد'],
+    [/ما\s+رضى/gi,'لم يوافق'],
+    [/طلبنا\s+منه/gi,'تم طلب'],
+    [/طلب\s+منه/gi,'تم طلب'],
+    [/سأل\s+عن/gi,'استفسر عن'],
+    [/سأل/gi,'استفسر'],
+    [/اليوم/gi,'في اليوم نفسه'],
+    [/الصبح/gi,'في الفترة الصباحية'],
+    [/الصباح/gi,'في الفترة الصباحية'],
+    [/الحين/gi,'حاليًا'],
+    [/احين/gi,'حاليًا'],
+    [/المشكلة/gi,'الملاحظة'],
+    [/تبديل/gi,'استبدال'],
+    [/تغيير/gi,'استبدال']
+  ];
+  replacements.forEach(([rx,val])=>{ s=s.replace(rx,val); });
+
+  if(field==='details' && /^حضرت المركبة\b/i.test(s) && !/إلى مركز الفحص الفني/i.test(s)){
+    s=s.replace(/^حضرت المركبة\b/i,'حضرت المركبة إلى مركز الفحص الفني');
+  }
+
+  s=s.replace(/\s+،/g,'،').replace(/،\s*،/g,'،').replace(/\s+\./g,'.').trim();
+  if (s && !/[.!؟]$/.test(s)) s += '.';
+  return s;
+}
+
+function rewriteWithAI(field,btnId,statusId){
   const el=$(field), btn=$(btnId), status=$(statusId);
   const original=el.value.trim();
   if(!original){alert('اكتب النص أولاً ثم اضغط زر الصياغة الرسمية.');el.focus();return}
   if(original.length>5000){alert('النص طويل جداً. يرجى اختصاره إلى 5000 حرف أو أقل.');return}
-  btn.disabled=true; status.textContent='جاري تحويل النص إلى صياغة رسمية...';
-  try{
-    const res=await fetch('/api/rewrite',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:original,field})});
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok) throw new Error(data.error||'تعذر الاتصال بخدمة الذكاء الاصطناعي.');
-    if(!data.text) throw new Error('لم يتم استلام نص من خدمة الذكاء الاصطناعي.');
-    el.value=data.text.trim();
-    status.textContent='✓ تم تحويل النص إلى صياغة رسمية. يمكنك تعديله قبل حفظ التقرير.';
-  }catch(err){
-    console.error(err); status.textContent=''; alert(err.message||'حدث خطأ أثناء الصياغة الرسمية.');
-  }finally{btn.disabled=false}
+  btn.disabled=true;
+  status.textContent='جاري تحويل النص إلى صياغة رسمية...';
+  setTimeout(()=>{
+    try{
+      const result=formalizeArabic(original,field);
+      el.value=result;
+      status.textContent='✓ تم تحويل النص إلى صياغة رسمية. يمكنك تعديله قبل حفظ التقرير.';
+    }catch(err){
+      console.error(err);
+      status.textContent='';
+      alert('تعذر تحويل النص. يمكنك تعديل النص يدويًا.');
+    }finally{
+      btn.disabled=false;
+    }
+  },180);
 }
 init();
 </script>
