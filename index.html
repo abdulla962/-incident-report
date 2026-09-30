@@ -65,95 +65,56 @@ function backToForm(){$('preview').style.display='none';$('new').classList.remov
 function clearForm(){ids.forEach(id=>{if(id==='location')return;if(id==='branch'){ $(id).value='Riffa'; return; }if(id==='incidentType'||id==='severity'){$(id).selectedIndex=0;return}$(id).value=''});updateBranch();$('ref').value=genRef();let d=new Date();$('date').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;$('time').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`}
 
 function formalizeArabic(text, field){
-  let raw=String(text||'').replace(/\r?\n+/g,' ').replace(/\s+/g,' ').trim();
+  const raw=String(text||'').replace(/\r?\n+/g,' ').replace(/\s+/g,' ').trim();
   if(!raw) return '';
-  let s=raw;
-
-  // Common Bahraini/Gulf wording -> formal administrative wording.
-  const basic=[
-    [/\bالزبون\b/gi,'العميل'],[/\bالزبونه\b/gi,'العميلة'],[/\bالزبونة\b/gi,'العميلة'],
-    [/\bالسيارة\b/gi,'المركبة'],[/\bيات سيارة\b/gi,'حضرت مركبة'],[/\bجات سيارة\b/gi,'حضرت مركبة'],
-    [/\bجت سيارة\b/gi,'حضرت المركبة'],[/\bالصبح\b/gi,'الفترة الصباحية'],[/\bالصباح\b/gi,'الفترة الصباحية'],
-    [/\bاحين\b/gi,'حاليًا'],[/\bالحين\b/gi,'حاليًا'],
-    [/\bمب\s+مقبول\b/gi,'غير مقبول'],[/\bمو\s+مقبول\b/gi,'غير مقبول'],
-    [/\bمب\s+صحيح\b/gi,'غير صحيح'],[/\bمو\s+صحيح\b/gi,'غير صحيح'],
-    [/\bما\s+اجتازت\b/gi,'لم تجتز'],[/\bما\s+اجتاز\b/gi,'لم يجتز'],
-    [/\bما\s+مشت\b/gi,'لم تجتز'],[/\bما\s+تعدت\b/gi,'لم تجتز'],
-    [/\bاحتج\b/gi,'أبدى اعتراضه'],[/\bاعترض\b/gi,'أبدى اعتراضه'],
-    [/\bقال\s+انه\b/gi,'أفاد بأنه'],[/\bقال\s+إنه\b/gi,'أفاد بأنه'],
-    [/\bراح\s+يرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],[/\bبيرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],
-    [/\bيرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],
-    [/\bشرحنا\b/gi,'تم توضيح'],[/\bشرحت\s+له\b/gi,'تم توضيح ذلك له'],
-    [/\bقلت\s+له\b/gi,'تم إبلاغه'],[/\bقلنا\s+له\b/gi,'تم إبلاغه'],[/\bبلغناه\b/gi,'تم إبلاغه'],
-    [/\bخبرناه\b/gi,'تم إبلاغه'],[/\bرفض\s+يدفع\b/gi,'رفض سداد الرسوم'],
-    [/\bما\s+رضى\s+يدفع\b/gi,'رفض سداد الرسوم'],[/\bما\s+رضى\b/gi,'لم يوافق'],
-    [/\bسأل\s+عن\b/gi,'استفسر عن'],[/\bسأل\b/gi,'استفسر'],
-    [/\bتبديل\b/gi,'استبدال'],[/\bتغيير\b/gi,'استبدال']
-  ];
-  basic.forEach(([rx,v])=>s=s.replace(rx,v));
-  s=s.replace(/\s+/g,' ').trim();
 
   if(field==='details'){
-    // Build a clean report from the common structure: arrival + inspector + result + customer response.
-    let parts=[];
-    let period='';
-    if(/الفترة\s+الصباحية/i.test(raw)) period=' خلال الفترة الصباحية';
-    else if(/الفترة\s+المسائية/i.test(raw)) period=' خلال الفترة المسائية';
+    const parts=[];
+    const hasArrival=/^(?:حضرت|جات|جت|يات)\s+(?:سيارة|المركبة)/i.test(raw);
+    const period=/\b(?:الصبح|الصباح|الفترة الصباحية)\b/i.test(raw) ? ' خلال الفترة الصباحية' : /\b(?:الليل|المساء|الفترة المسائية)\b/i.test(raw) ? ' خلال الفترة المسائية' : '';
 
-    // Inspector name after "فحصها/فحص المركبة/تم فحصها من قبل الفاحص".
+    // Capture only the inspector's name, stopping before the next event/connector.
     let inspector='';
-    let m=raw.match(/(?:فحصها|فحص\s+المركبة|تم\s+فحصها|تم\s+فحص\s+المركبة)(?:\s+من\s+قبل\s+الفاحص)?\s+([\u0600-\u06FF\w]+(?:\s+[\u0600-\u06FF\w]+){0,3})/i);
-    if(m) inspector=m[1].trim().replace(/[،.].*$/,'');
+    let m=raw.match(/(?:فحصها|فحص\s+(?:المركبة|السيارة)|تم\s+فحصها|تم\s+فحص\s+(?:المركبة|السيارة))\s+(?:من\s+قبل\s+)?(?:الفاحص\s+)?([^،,.]+?)(?=\s+(?:ولم|والمركبة|والزبون|والعميل|وقال|وأفاد|ثم|لكن|إلا)|[،,.]|$)/i);
+    if(m) inspector=m[1].trim();
 
-    // If the text starts with a vehicle arrival statement, make the opening sentence official.
-    if(/^(?:حضرت|جات|يات|جت)\s+(?:سيارة|المركبة|المركبة)/i.test(raw) || /حضرت\s+المركبة/i.test(s)){
-      parts.push('حضرت المركبة إلى مركز الفحص الفني'+period+'، وتم إجراء الفحص'+(inspector?' من قبل الفاحص '+inspector:'')+'.');
+    if(hasArrival || /حضرت\s+المركبة/i.test(raw)){
+      parts.push('حضرت المركبة إلى مركز الفحص الفني'+period+'، وتم إجراء الفحص'+(inspector ? ' من قبل الفاحص '+inspector : '')+'.');
+    } else if(inspector){
+      parts.push('تم إجراء الفحص من قبل الفاحص '+inspector+'.');
     }
 
-    // Inspection result: avoid the duplicated "المركبة ... والمركبة" problem.
-    let failed=/لم\s+تجتز|ما\s+اجتازت|لم\s+تجتز\s+المركبة|ما\s+مشت|ما\s+تعدت|ما\s+انقبلت/i.test(s);
-    if(failed || /تجتاز|تجتز|اجتازت|انقبلت/i.test(raw) && /فحص/i.test(raw)){
-      if(/انقبلت/i.test(raw)) parts.push('ولم تُقبل المركبة في الفحص.');
-      else parts.push('ولم تجتز المركبة الفحص.');
+    const failed=/(?:لم|ما)\s+(?:تجتز|اجتازت|يجتز|اجتاز|مشت|تعدت|انقبلت)/i.test(raw) || /لم\s+تجتز/i.test(raw);
+    if(failed) parts.push('ولم تجتز المركبة الفحص.');
+
+    // Only add a reason when the user explicitly supplied one.
+    const reason=raw.match(/(?:بسبب|نتيجة|علشان|عشان)\s+(.+?)(?=\s+(?:و|والزبون|والعميل|وقال|وأفاد)|$)/i);
+    if(reason && reason[1].trim()) parts.push('وذلك بسبب '+reason[1].trim().replace(/[،.]+$/,'')+'.');
+
+    if(/(?:وضح|شرح)\s+(?:على|لل)\s+(?:العميل|الزبون)|شرحنا|شرحت\s+له|قلت\s+له|قلنا\s+له|بلغناه|خبرناه/i.test(raw)){
+      parts.push('تم توضيح أسباب عدم اجتياز الفحص والإجراءات المطلوبة للعميل.');
     }
 
-    // Reasons/technical findings if explicitly present.
-    let reason=raw.match(/(?:بسبب|نتيجة|علشان|عشان)\s+(.+?)(?=(?:\s+(?:و|والعميل|والزبون|وقال|وأفاد)|$))/i);
-    if(reason && reason[1].trim()){
-      let r=reason[1].trim().replace(/[.،]+$/,'');
-      parts.push('وذلك بسبب '+r+'.');
-    }
-
-    // Customer response and complaint.
-    if(/احتج|اعترض|الزبون|العميل.*(?:اعتراض|احتج)/i.test(raw)){
-      let sentence='أبدى العميل اعتراضه على نتيجة الفحص.';
-      if(/(?:راح|بيرفع|يرفع|تقديم)\s*شكوى|شكوى/i.test(raw)) sentence='أبدى العميل اعتراضه على نتيجة الفحص، وأفاد بأنه سيقوم بتقديم شكوى.';
-      parts.push(sentence);
-    } else if(/شكوى/i.test(raw)){
+    const complaint=/(?:احتج|اعترض|اعتراض)/i.test(raw);
+    const saidComplaint=/(?:راح|بيرفع|يرفع|تقديم)\s+شكوى|شكوى/i.test(raw);
+    if(complaint && saidComplaint){
+      parts.push('أبدى العميل اعتراضه على نتيجة الفحص، وأفاد بأنه سيقوم بتقديم شكوى.');
+    } else if(complaint){
+      parts.push('أبدى العميل اعتراضه على نتيجة الفحص.');
+    } else if(saidComplaint){
       parts.push('وأفاد العميل بأنه سيقوم بتقديم شكوى.');
     }
 
-    // Explicit "وضح للعميل السبب" statement.
-    if(/وضح\s+(?:على|لل)\s+العميل|شرحنا|شرحت\s+له|قلت\s+له|قلنا\s+له|بلغناه|خبرناه|تم\s+توضيح/i.test(raw)){
-      parts.splice(Math.max(parts.length-1,0),0,'تم توضيح أسباب عدم اجتياز الفحص والإجراءات المطلوبة للعميل.');
-    }
-
-    if(parts.length){
-      // Remove duplicate adjacent ideas and join as a coherent paragraph.
-      let result=parts.join(' ').replace(/\s+/g,' ').trim();
-      result=result.replace(/المركبة\s+المركبة/g,'المركبة');
-      return result;
-    }
+    if(parts.length) return parts.join(' ').replace(/\s+/g,' ').trim();
   }
 
   if(field==='action'){
-    let parts=[];
-    if(/وضح\s+(?:على|لل)\s+العميل|شرحنا|شرحت\s+له|قلت\s+له|قلنا\s+له|بلغناه|خبرناه|تم\s+توضيح/i.test(raw)){
-      parts.push('تم توضيح أسباب الملاحظة والإجراءات المطلوبة للعميل.');
+    const parts=[];
+    if(/وضح\s+(?:على|لل)\s+(?:العميل|الزبون)|شرحنا|شرحت\s+له|قلت\s+له|قلنا\s+له|بلغناه|خبرناه/i.test(raw)){
+      parts.push('تم توضيح الإجراءات المطلوبة للعميل.');
     }
     if(/إصلاح|اصلح|تصليح|تغيير|تبديل|استبدال/i.test(raw)){
-      // Preserve the user's stated repair action without inventing the item.
-      let act=raw.match(/(?:تم\s+)?(?:إصلاح|اصلح|تصليح|تغيير|تبديل|استبدال)\s+(.+?)(?=\s*(?:و|ثم|،|\.|$))/i);
+      const act=raw.match(/(?:تم\s+)?(?:إصلاح|اصلح|تصليح|تغيير|تبديل|استبدال)\s+(.+?)(?=\s*(?:و|ثم|،|\.|$))/i);
       if(act) parts.push('تم '+act[0].trim().replace(/^تم\s+/i,'')+'.');
     }
     if(/رفض\s+سداد|ما\s+رضى\s+يدفع|رفض\s+يدفع|الدفع|الرسوم/i.test(raw)) parts.push('رفض العميل سداد الرسوم المستحقة.');
@@ -161,7 +122,17 @@ function formalizeArabic(text, field){
     if(parts.length) return parts.join(' ').replace(/\s+/g,' ').trim();
   }
 
-  // Generic cleanup for other text; do not invent facts.
+  // Generic formal wording without inventing facts.
+  let s=raw;
+  const replacements=[
+    [/\bالزبون\b/gi,'العميل'],[/\bالزبونه\b/gi,'العميلة'],[/\bالزبونة\b/gi,'العميلة'],
+    [/\bالسيارة\b/gi,'المركبة'],[/\bالصبح\b/gi,'الفترة الصباحية'],[/\bالصباح\b/gi,'الفترة الصباحية'],
+    [/\bاحتج\b/gi,'أبدى اعتراضه'],[/\bاعترض\b/gi,'أبدى اعتراضه'],
+    [/\bقال\s+انه\b/gi,'أفاد بأنه'],[/\bقال\s+إنه\b/gi,'أفاد بأنه'],
+    [/\bراح\s+يرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],[/\bبيرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],
+    [/\bيرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],[/\bمب\s+مقبول\b/gi,'غير مقبول'],[/\bمو\s+مقبول\b/gi,'غير مقبول']
+  ];
+  replacements.forEach(([rx,v])=>s=s.replace(rx,v));
   s=s.replace(/\s+([،.؟])/g,'$1').replace(/،\s*،/g,'،').replace(/\.\s*\./g,'.').trim();
   if(s && !/[.!؟]$/.test(s)) s+='.';
   return s;
