@@ -36,7 +36,7 @@ main{max-width:1100px;margin:18px auto;padding:0 12px}.tabs{display:flex;gap:8px
 <div class="full"><label>الإجراء المتخذ</label><textarea id="action" placeholder="اكتب الإجراء الذي تم اتخاذه بطريقتك العادية..."></textarea><div class="ai-box"><button type="button" class="ai-btn" id="aiActionBtn" onclick="rewriteWithAI('action','aiActionBtn','aiActionStatus')">✨ تحويل إلى صياغة رسمية</button><div class="ai-status" id="aiActionStatus"></div></div></div>
 <div><label>اسم الفاحص</label><input id="inspector"></div><div><label>الرقم الوظيفي</label><input id="employeeId"></div>
 <div><label>اسم المسؤول</label><input id="supervisor"></div><div><label>ملاحظات إضافية</label><input id="notes"></div>
-</div><div class="ai-status no-print" style="margin-top:12px">ملاحظة: أداة الصياغة الرسمية تعمل داخل الموقع بدون اشتراك أو API، وتحوّل العبارات الشائعة إلى صياغة إدارية مع الحفاظ على الأسماء والأرقام والوقائع التي كتبتها.</div><div class="actions no-print"><button class="primary" onclick="saveAndPreview()">حفظ وإنشاء التقرير</button><button class="muted" onclick="clearForm()">مسح</button></div>
+</div><div class="ai-status no-print" style="margin-top:12px">ملاحظة: أداة الصياغة الرسمية تعمل داخل الموقع بدون اشتراك أو API، وتعدّل الكلمات والعبارات العامية إلى صياغة إدارية مع الحفاظ على نفس المعلومات والتفاصيل وترتيبها، دون إضافة أحداث أو معلومات جديدة.</div><div class="actions no-print"><button class="primary" onclick="saveAndPreview()">حفظ وإنشاء التقرير</button><button class="muted" onclick="clearForm()">مسح</button></div>
 </div></section>
 <section id="list" class="hidden"><div class="card no-print"><div class="section-title">التقارير المحفوظة على هذا الجهاز</div><input class="search" id="search" oninput="renderList()" placeholder="بحث برقم التقرير أو رقم السيارة أو التاريخ..."><div id="reportsList"></div></div></section>
 <section id="preview"><div class="report-sheet">
@@ -65,78 +65,126 @@ function backToForm(){$('preview').style.display='none';$('new').classList.remov
 function clearForm(){ids.forEach(id=>{if(id==='location')return;if(id==='branch'){ $(id).value='Riffa'; return; }if(id==='incidentType'||id==='severity'){$(id).selectedIndex=0;return}$(id).value=''});updateBranch();$('ref').value=genRef();let d=new Date();$('date').value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;$('time').value=`${pad(d.getHours())}:${pad(d.getMinutes())}`}
 
 function formalizeArabic(text, field){
-  const raw=String(text||'').replace(/\r?\n+/g,' ').replace(/\s+/g,' ').trim();
-  if(!raw) return '';
+  // Light-touch formalization: preserve the user's facts, order and meaning.
+  // No new events, reasons, people, authorities or conclusions are generated.
+  let s=String(text||'').replace(/\r?\n+/g,' ').replace(/\s+/g,' ').trim();
+  if(!s) return '';
 
-  if(field==='details'){
-    const parts=[];
-    const hasArrival=/^(?:حضرت|جات|جت|يات)\s+(?:سيارة|المركبة)/i.test(raw);
-    const period=/\b(?:الصبح|الصباح|الفترة الصباحية)\b/i.test(raw) ? ' خلال الفترة الصباحية' : /\b(?:الليل|المساء|الفترة المسائية)\b/i.test(raw) ? ' خلال الفترة المسائية' : '';
-
-    // Capture only the inspector's name, stopping before the next event/connector.
-    let inspector='';
-    let m=raw.match(/(?:فحصها|فحص\s+(?:المركبة|السيارة)|تم\s+فحصها|تم\s+فحص\s+(?:المركبة|السيارة))\s+(?:من\s+قبل\s+)?(?:الفاحص\s+)?([^،,.]+?)(?=\s+(?:ولم|والمركبة|والزبون|والعميل|وقال|وأفاد|ثم|لكن|إلا)|[،,.]|$)/i);
-    if(m) inspector=m[1].trim();
-
-    if(hasArrival || /حضرت\s+المركبة/i.test(raw)){
-      parts.push('حضرت المركبة إلى مركز الفحص الفني'+period+'، وتم إجراء الفحص'+(inspector ? ' من قبل الفاحص '+inspector : '')+'.');
-    } else if(inspector){
-      parts.push('تم إجراء الفحص من قبل الفاحص '+inspector+'.');
-    }
-
-    const failed=/(?:لم|ما)\s+(?:تجتز|اجتازت|يجتز|اجتاز|مشت|تعدت|انقبلت)/i.test(raw) || /لم\s+تجتز/i.test(raw);
-    if(failed) parts.push('ولم تجتز المركبة الفحص.');
-
-    // Only add a reason when the user explicitly supplied one.
-    const reason=raw.match(/(?:بسبب|نتيجة|علشان|عشان)\s+(.+?)(?=\s+(?:و|والزبون|والعميل|وقال|وأفاد)|$)/i);
-    if(reason && reason[1].trim()) parts.push('وذلك بسبب '+reason[1].trim().replace(/[،.]+$/,'')+'.');
-
-    if(/(?:وضح|شرح)\s+(?:على|لل)\s+(?:العميل|الزبون)|شرحنا|شرحت\s+له|قلت\s+له|قلنا\s+له|بلغناه|خبرناه/i.test(raw)){
-      parts.push('تم توضيح أسباب عدم اجتياز الفحص والإجراءات المطلوبة للعميل.');
-    }
-
-    const complaint=/(?:احتج|اعترض|اعتراض)/i.test(raw);
-    const saidComplaint=/(?:راح|بيرفع|يرفع|تقديم)\s+شكوى|شكوى/i.test(raw);
-    if(complaint && saidComplaint){
-      parts.push('أبدى العميل اعتراضه على نتيجة الفحص، وأفاد بأنه سيقوم بتقديم شكوى.');
-    } else if(complaint){
-      parts.push('أبدى العميل اعتراضه على نتيجة الفحص.');
-    } else if(saidComplaint){
-      parts.push('وأفاد العميل بأنه سيقوم بتقديم شكوى.');
-    }
-
-    if(parts.length) return parts.join(' ').replace(/\s+/g,' ').trim();
-  }
-
-  if(field==='action'){
-    const parts=[];
-    if(/وضح\s+(?:على|لل)\s+(?:العميل|الزبون)|شرحنا|شرحت\s+له|قلت\s+له|قلنا\s+له|بلغناه|خبرناه/i.test(raw)){
-      parts.push('تم توضيح الإجراءات المطلوبة للعميل.');
-    }
-    if(/إصلاح|اصلح|تصليح|تغيير|تبديل|استبدال/i.test(raw)){
-      const act=raw.match(/(?:تم\s+)?(?:إصلاح|اصلح|تصليح|تغيير|تبديل|استبدال)\s+(.+?)(?=\s*(?:و|ثم|،|\.|$))/i);
-      if(act) parts.push('تم '+act[0].trim().replace(/^تم\s+/i,'')+'.');
-    }
-    if(/رفض\s+سداد|ما\s+رضى\s+يدفع|رفض\s+يدفع|الدفع|الرسوم/i.test(raw)) parts.push('رفض العميل سداد الرسوم المستحقة.');
-    if(/شكوى/i.test(raw)) parts.push('وأفاد العميل بأنه سيقوم بتقديم شكوى.');
-    if(parts.length) return parts.join(' ').replace(/\s+/g,' ').trim();
-  }
-
-  // Generic formal wording without inventing facts.
-  let s=raw;
   const replacements=[
-    [/\bالزبون\b/gi,'العميل'],[/\bالزبونه\b/gi,'العميلة'],[/\bالزبونة\b/gi,'العميلة'],
-    [/\bالسيارة\b/gi,'المركبة'],[/\bالصبح\b/gi,'الفترة الصباحية'],[/\bالصباح\b/gi,'الفترة الصباحية'],
-    [/\bاحتج\b/gi,'أبدى اعتراضه'],[/\bاعترض\b/gi,'أبدى اعتراضه'],
-    [/\bقال\s+انه\b/gi,'أفاد بأنه'],[/\bقال\s+إنه\b/gi,'أفاد بأنه'],
-    [/\bراح\s+يرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],[/\bبيرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],
-    [/\bيرفع\s+شكوى\b/gi,'سيقوم بتقديم شكوى'],[/\bمب\s+مقبول\b/gi,'غير مقبول'],[/\bمو\s+مقبول\b/gi,'غير مقبول']
+    // Common Bahrain/Gulf wording -> formal administrative wording
+    [/\bالزبون\b/gu,'العميل'],
+    [/\bالزبونه\b/gu,'العميلة'],
+    [/\bالزبونة\b/gu,'العميلة'],
+    [/\bالزبائن\b/gu,'العملاء'],
+    [/\bسيارة\b/gu,'مركبة'],
+    [/\bالسيارة\b/gu,'المركبة'],
+    [/\bسيارته\b/gu,'مركبته'],
+    [/\bسيارتها\b/gu,'مركبتها'],
+    [/\bالصبح\b/gu,'الفترة الصباحية'],
+    [/\bالصباح\b/gu,'الفترة الصباحية'],
+    [/\bبالليل\b/gu,'خلال الفترة المسائية'],
+    [/\bالليل\b/gu,'الفترة المسائية'],
+    [/\bالظهر\b/gu,'فترة الظهيرة'],
+    [/\bعقب\b/gu,'بعد ذلك'],
+    [/\bعقبها\b/gu,'بعد ذلك'],
+    [/\bبعدين\b/gu,'بعد ذلك'],
+    [/\bبعدينه\b/gu,'بعد ذلك'],
+    [/\bالحين\b/gu,'حالياً'],
+    [/\bاحين\b/gu,'حالياً'],
+    [/\bالحين\b/gu,'حالياً'],
+    [/\bهني\b/gu,'هنا'],
+    [/\bهناك\b/gu,'في الموقع المذكور'],
+    [/\bمب\b/gu,'غير'],
+    [/\bمو\b/gu,'غير'],
+    [/\bما\s+اجتاز\b/gu,'لم يجتز'],
+    [/\bما\s+تجتاز\b/gu,'لم تجتز'],
+    [/\bما\s+جتاز\b/gu,'لم يجتز'],
+    [/\bما\s+انقبلت\b/gu,'لم تُقبل'],
+    [/\bمشت\b/gu,'اجتازت'],
+    [/\bتعدت\b/gu,'اجتازت'],
+    [/\bانقبلت\b/gu,'قُبلت'],
+    [/\bفحصها\b/gu,'تم فحصها'],
+    [/\bفحصه\b/gu,'تم فحصه'],
+    [/\bيفحص\b/gu,'يقوم بفحص'],
+    [/\bفحصت\b/gu,'تم فحص'],
+    [/\bفحصنا\b/gu,'تم فحص'],
+    [/\bسوى\b/gu,'قام بـ'],
+    [/\bسوينا\b/gu,'تم إجراء'],
+    [/\bسويت\b/gu,'تم إجراء'],
+    [/\bسوى له\b/gu,'قام بإجراء'],
+    [/\bوضح\b/gu,'أوضح'],
+    [/\bوضحنا\b/gu,'تم توضيح'],
+    [/\bشرحنا\b/gu,'تم توضيح'],
+    [/\bشرحنا له\b/gu,'تم توضيح ذلك له'],
+    [/\bشرحت له\b/gu,'تم توضيح ذلك له'],
+    [/\bقلت له\b/gu,'تم إبلاغه'],
+    [/\bقلنا له\b/gu,'تم إبلاغه'],
+    [/\bبلغناه\b/gu,'تم إبلاغه'],
+    [/\bخبرناه\b/gu,'تم إبلاغه'],
+    [/\bاحتج\b/gu,'أبدى اعتراضه'],
+    [/\bاحتجت\b/gu,'أبدى اعتراضه'],
+    [/\bاعترض\b/gu,'أبدى اعتراضه'],
+    [/\bاعترضت\b/gu,'أبدى اعتراضه'],
+    [/\bاصر\b/gu,'أصر'],
+    [/\bاصَر\b/gu,'أصر'],
+    [/\bأصرّ\b/gu,'أصر'],
+    [/\bقال\s+بيرفع\s+شكوى\b/gu,'أفاد بأنه سيقوم بتقديم شكوى'],
+    [/\bقال\s+راح\s+يرفع\s+شكوى\b/gu,'أفاد بأنه سيقوم بتقديم شكوى'],
+    [/\bبيرفع\s+شكوى\b/gu,'سيقوم بتقديم شكوى'],
+    [/\bراح\s+يرفع\s+شكوى\b/gu,'سيقوم بتقديم شكوى'],
+    [/\bراح\s+يقدم\s+شكوى\b/gu,'سيقوم بتقديم شكوى'],
+    [/\bراح\s+يشتكي\b/gu,'سيقوم بتقديم شكوى'],
+    [/\bبشتكي\b/gu,'سيتقدم بشكوى'],
+    [/\bبيشتكي\b/gu,'سيتقدم بشكوى'],
+    [/\bيرفع\s+شكوى\b/gu,'يقدم شكوى'],
+    [/\bيبي\b/gu,'يرغب في'],
+    [/\bيبي\s+يقدم\b/gu,'يرغب في تقديم'],
+    [/\bيبي\s+يشتكي\b/gu,'يرغب في تقديم شكوى'],
+    [/\bما\s+رضى\b/gu,'رفض'],
+    [/\bمو\s+راضي\b/gu,'غير موافق'],
+    [/\bمابي\b/gu,'لا يرغب في'],
+    [/\bما\s+يرضى\b/gu,'يرفض'],
+    [/\bرفض\s+انه\b/gu,'رفض أن'],
+    [/\bلكن\b/gu,'إلا أن'],
+    [/\bبس\b/gu,'إلا أن'],
+    [/\bعشان\b/gu,'بسبب'],
+    [/\bعلشان\b/gu,'بسبب'],
+    [/\bلان\b/gu,'لأن'],
+    [/\bلانه\b/gu,'لأنه'],
+    [/\bانه\b/gu,'أنه'],
+    [/\bان\s+/gu,'أن '],
+    [/\bللزبون\b/gu,'للعميل'],
+    [/\bللزبونة\b/gu,'للعميلة'],
+    [/\bللزبائن\b/gu,'للعملاء'],
+    [/\bللمسؤول\b/gu,'إلى المسؤول'],
+    [/\bللمشرف\b/gu,'إلى المشرف'],
+    [/\bللإدارة العامة للمرور\b/gu,'إلى الإدارة العامة للمرور'],
+    [/\bللادارة العامة للمرور\b/gu,'إلى الإدارة العامة للمرور'],
+    [/\bتوجه\s+المسؤول\s+للعميل\b/gu,'توجه المسؤول إلى العميل'],
+    [/\bتوجه\s+المسؤول\s+للزبون\b/gu,'توجه المسؤول إلى العميل'],
+    [/\bراح\s+لـ/gu,'توجه إلى '],
+    [/\bراح\s+لل/gu,'توجه إلى '],
+    [/\bجاء\b/gu,'حضر'],
+    [/\bجات\b/gu,'حضرت'],
+    [/\bجت\b/gu,'حضرت'],
+    [/\bيا\s+سيارة\b/gu,'حضرت مركبة'],
+    [/\bطقيت\b/gu,'ضغطت'],
+    [/\bاليوم\b/gu,'في هذا اليوم'],
+    [/\bامس\b/gu,'في اليوم السابق'],
+    [/\bامس\b/gu,'في اليوم السابق']
   ];
-  replacements.forEach(([rx,v])=>s=s.replace(rx,v));
-  s=s.replace(/\s+([،.؟])/g,'$1').replace(/،\s*،/g,'،').replace(/\.\s*\./g,'.').trim();
-  if(s && !/[.!؟]$/.test(s)) s+='.';
+
+  replacements.forEach(([rx,v])=>{ s=s.replace(rx,v); });
+
+  // Small grammar/spacing clean-up only; do not create new facts.
+  s=s.replace(/\s+([،,؛:.؟!])/gu,'$1');
+  s=s.replace(/([،,؛])\s*/gu,'$1 ');
+  s=s.replace(/\s{2,}/gu,' ').trim();
+  s=s.replace(/^(?:و\s*){2,}/gu,'و ');
+  if(s && !/[.!؟]$/u.test(s)) s+='.';
   return s;
 }
+
 function rewriteWithAI(field,btnId,statusId){
   const el=$(field), btn=$(btnId), status=$(statusId);
   const original=el.value.trim();
